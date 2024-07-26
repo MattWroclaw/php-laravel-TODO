@@ -86,7 +86,7 @@ Route::get('/tasks/{id}' , function ($id)  {
 })->name('task.show');
 
 
-Route::post('tasks', function(Request $request){
+Route::post('/tasks', function(Request $request){
   // dd('We have reached the store route' , $request->all());
   $data = $request->validate([
     'title' =>'required|max:255',
@@ -99,7 +99,8 @@ Route::post('tasks', function(Request $request){
   $task->long_description = $data['long_description'];
   $task->save();
 
-  return redirect()->route('task.show', ['id' => $task->id]);
+  return redirect()->route('task.show', ['id' => $task->id])
+    ->with('success', 'Task created sucessfully!');
 
 })->name('tasks.store');
 
