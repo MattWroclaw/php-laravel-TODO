@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 
 
@@ -59,34 +60,69 @@ $tasks = [
   ),
 ];
 
+
 Route::get('/' , function () {
     return redirect() ->route('tasks.index');
 });
 
-Route::get('/tasks', function () use ($tasks) {
+
+Route::get('/tasks', function ()  {
     // return view('welcome');
     return view('index' ,[
-        'tasks' => $tasks
+        // 'tasks' => \App\Models\Task::all()
+        'tasks' => \App\Models\Task::latest()->get()
     ]);
 })->name('tasks.index');
 
-Route::get('/tasks/{id}' , function ($id) use ($tasks) {
-    $task = collect($tasks)->firstWhere('id', $id);
 
-    if(!$task){
-        abort(Response::HTTP_NOT_FOUND);
-    }
+Route::view('/tasks/create', 'create')->name('tasks.create');
+
+
+Route::get('/tasks/{id}' , function ($id)  {
+//  refer to the Task Model class , so there is FQPath. From where find() method is? "There is one" :)
+    $task = \App\Models\Task::findOrFail($id);
 
     return view('show', ['task' => $task]);
 })->name('task.show');
 
 
+Route::post('tasks', function(Request $request){
+  // dd('We have reached the store route' , $request->all());
+  $data = $request->validate([
+    'title' =>'required|max:255',
+    'description' =>'required',
+    'long_description' =>'required'
+  ]);
+  $task = new \App\Models\Task();
+  $task->title = $data['title'];
+  $task->description = $data['description'];
+  $task->long_description = $data['long_description'];
+  $task->save();
+
+  return redirect()->route('task.show', ['id' => $task->id]);
+
+})->name('tasks.store');
 
 
 
 
+// Gdy braliśmy taska z przykładowej klasy Task
+// Route::get('/tasks/{id}' , function ($id) use ($tasks) {
+//   $task = collect($tasks)->firstWhere('id', $id);
 
+//   if(!$task){
+//       abort(Response::HTTP_NOT_FOUND);
+//   }
 
+//   return view('show', ['task' => $task]);
+// })->name('task.show');
+
+// Route::get('/tasks', function () use ($tasks) {
+//   // return view('welcome');
+//   return view('index' ,[
+//       'tasks' => $tasks
+//   ]);
+// })->name('tasks.index');
 
 // Route::get('/test1', function () {
 //     // return view('welcome');
