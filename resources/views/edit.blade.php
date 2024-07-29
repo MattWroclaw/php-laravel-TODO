@@ -13,14 +13,14 @@
 
 @section('content')
 <!-- {{ $errors}} -->
-<form method="POST" action="{{ route('tasks.update', ['id' =>$task->id] )}}">
+<form method="POST" action="{{ route('tasks.update', ['task' =>$task->id] )}}">
     @csrf
     @method('PUT')
     <div>
         <label for="title">
             Title
         </label>
-        <input text="text" name="title" id="title"  value = {{ $task->title }}/>
+        <input text="text" name="title" id="title"  value = "{{ $task->title }}"/>
         @error('title')
             <p class="error-messsage"> {{ $message }} </p>
         @enderror

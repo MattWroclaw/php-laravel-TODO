@@ -1,4 +1,4 @@
-1. Włączamy server za pomocą `php artisan serve` (it takes some good time)
+1. Włączamy server za pomocą `php artisan serve` (it takes some good time), działa na localhost:8000 (*nie zapomnij włączyć Dockera z bazą danych*)
 2. Lista wszystkich routingów `php artistan route:list`
 3. layouts -> tam dajemy wspólne el. html, które będa dziedziczone w blades
 4. dodanie bazy danych: zmiana portu w dockerfile na 3305, w `.env` na 3305, zmieniamy w `.env` to `DB_DATABASE=laravel-10-task-list` zatrzymujemy server i robimy `php artisan migrate` Później piszemy `yes` gdy zapyta się czy stworzyć nową bazę. 
@@ -24,3 +24,7 @@ Możemy zatrzymać server, i wpisać `php artisan tinker` i możemy pisać queri
 20. 1. Kiedy wchodzisz na servis na Laravelu , to laravel tworzy session (przypisuje jakiś uniqueID). To jest przechowywane w cookie. Jak przechodzisz z widoku na widok, to zawsze to session też idzie. Na tej podstawie Laravel widzi że to ten sam user. Sessions są przechowywane w `./storage/framework/sessions`. Confifgurację przeprowadza się w `session.php` . Session dobrze jak jest przechowywana w `redis` a nie w file. Bo jak jest apka na kilku serverach to nie ma jak tego współdzielić.
 20. 2. funkcja `session()` jest dostępna w blade i w `web.php`
 21. HTML przyjmuje tylko 'POST' i 'GET' , nie można bezpośrednio dać 'PUT'. W Laravel stosuje się tzw. `method spoofing`. Metoda POST będzie miała dodatkowe pole `_method=PUT`. Laravel jak odkryje ze jest _method=PUT to zrobi redirect do kontorlera PUT. Implementacja: w formularzu dodaje się pod @csrf adnotację `@method('PUT')`
+22. Jak tworzymy Task, wpiszemy cześć dobrze a część źle, to validation usunie wszystko. Alby zachować to co jest OK, korzystamy w `create.blade.php` z metody `old('nazwa pola')`. *Uwaga* : to nie zadziała z metodą GET. *Uwaga2* : nie korzystamy z metody `old()` przy credkach
+23. Jeśli w metodach w `web.php` nie korzystamy z `id` tylko bezpośrednio z obiektu `Route::get('/tasks/{task}', function (Task $task)` to Laravel zakłada że {task} to jest `id` . Dlatego też URL wygląda tak: http://localhost:8000/tasks/3 . Domyślnie brany jest id obiektu, ale można to zmienić w obiekcie modelu `class Task extends Model { .. pyblic function getRouteKeyName(){return "slug";}}`
+24. Jeśli mamy takie same validation rules, możemy użyć `form request`  . Automatyzacja przez komendę: `php artisan make:request TaskRequest` . Ta komenda tworzy nam:  INFO  Request [C:\Projects\Playground\PHP-kurs-udemy\task-list\app\Http\Requests\TaskRequest.php] created successfully. 
+24. `Mass assignment`:  Wewnątrz "controlerów" zamiast Tworzyć new Task, później robić settery i robi save, to można załatwić za pomocą Task::`create()` albo `update()`. Tylko że trzeba zmienić w Modelu Task

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Task;
+use App\Http\Requests\TaskRequest;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -78,54 +79,78 @@ Route::get('/tasks', function ()  {
 
 Route::view('/tasks/create', 'create')->name('tasks.create');
 
-Route::get('/tasks/{id}/edit' , function ($id)  {
-  //  refer to the Task Model class , so there is FQPath. From where find() method is? "There is one" :)
-      $task = \App\Models\Task::findOrFail($id);
+/* This is OK, but can be done better  */
+// Route::get('/tasks/{id}/edit' , function ($id)  {
+//   //  refer to the Task Model class , so there is FQPath. From where find() method is? "There is one" :)
+//       $task = \App\Models\Task::findOrFail($id);
   
-      return view('edit', ['task' => $task]);
-  })->name('task.edit');
+//       return view('edit', ['task' => $task]);
+//   })->name('task.edit');
 
 
-Route::get('/tasks/{id}' , function ($id)  {
-//  refer to the Task Model class , so there is FQPath. From where find() method is? "There is one" :)
-    $task = \App\Models\Task::findOrFail($id);
-
-    return view('show', ['task' => $task]);
-})->name('task.show');
-
-
-Route::post('/tasks', function(Request $request){
-  // dd('We have reached the store route' , $request->all());
-  $data = $request->validate([
-    'title' =>'required|max:255',
-    'description' =>'required',
-    'long_description' =>'required'
+// This is doing the same what below but is preffered
+Route::get('/tasks/{task}/edit', function(Task $task){
+  // default task= task_id; Configuration in Task (Model) clas via getRouteKeyName() function
+  return view('edit' , [
+    'task' => $task
   ]);
-  $task = new \App\Models\Task();
-  $task->title = $data['title'];
-  $task->description = $data['description'];
-  $task->long_description = $data['long_description'];
-  $task->save();
+})->name('tasks.edit');
 
-  return redirect()->route('task.show', ['id' => $task->id])
+
+
+
+
+/* Old way */
+// Route::get('/tasks/{id}' , function ($id)  {
+// //  refer to the Task Model class , so there is FQPath. From where find() method is? "There is one" :)
+//     $task = \App\Models\Task::findOrFail($id);
+
+//     return view('show', ['task' => $task]);
+// })->name('tasks.show');
+
+Route::get('/tasks/{task}', function (Task $task){
+  return view('show' , [
+    'task' => $task
+  ]);
+})->name('tasks.show');
+
+Route::post('/tasks', function(TaskRequest $request){
+  // dd('We have reached the store route' , $request->all());
+
+  // if we use ::create() then we don t need the below
+  // $data = $request->validated();
+  // $task = new \App\Models\Task();
+  // $task->title = $data['title'];
+  // $task->description = $data['description'];
+  // $task->long_description = $data['long_description'];
+  // $task->save();
+
+  $task = Task::create($request->validated());
+
+  return redirect()->route('tasks.show', ['task' => $task->id])
     ->with('success', 'Task created sucessfully!');
 
 })->name('tasks.store');
 
-Route::put('/tasks/{id}', function($id, Request $request){
+Route::put('/tasks/{task}', function(Task $task, TaskRequest $request){
   // dd('We have reached the store route' , $request->all());
-  $data = $request->validate([
-    'title' =>'required|max:255',
-    'description' =>'required',
-    'long_description' =>'required'
-  ]);
-  $task =  Task::findOrFail($id);
-  $task->title = $data['title'];
-  $task->description = $data['description'];
-  $task->long_description = $data['long_description'];
-  $task->save(); // this will make update, not create a new one
+// to już niepotrzebne bo mamy TaskRequest
+  // $data = $request->validate([
+  //   'title' =>'required|max:255',
+  //   'description' =>'required',
+  //   'long_description' =>'required'
+  // ]);
+  
+  // $data = $request -> validated();
+  // $task->title = $data['title'];
+  // $task->description = $data['description'];
+  // $task->long_description = $data['long_description'];
+  // $task->save(); // this will make update, not create a new one
 
-  return redirect()->route('task.show', ['id' => $task->id])
+  $task->update($request->validated());
+
+
+  return redirect()->route('tasks.show', ['task' => $task->id])
     ->with('success', 'Task updated sucessfully!');
 
 })->name('tasks.update');
@@ -140,7 +165,7 @@ Route::put('/tasks/{id}', function($id, Request $request){
 //   }
 
 //   return view('show', ['task' => $task]);
-// })->name('task.show');
+// })->name('tasks.show');
 
 // Route::get('/tasks', function () use ($tasks) {
 //   // return view('welcome');
