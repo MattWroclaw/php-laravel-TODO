@@ -30,3 +30,4 @@ Możemy zatrzymać server, i wpisać `php artisan tinker` i możemy pisać queri
 24. `Mass assignment`:  Wewnątrz "controlerów" zamiast Tworzyć new Task, później robić settery i robi save, to można załatwić za pomocą Task::`create()` albo `update()`. Tylko że trzeba zmienić w Modelu Task
 25. W laravel jest coś takiego jak `soft delete` Dodatkowa kolumna w DB
 26. Korzystanie z `subview` za pomocą dyrektywy `@include` . Przykład: `create.view` oraz `update.view` są bardzo podobne, więc można wykorzystać wspólny kod. Wtedy w subview sprawdzamy czy mamy obiekt $task i jeśli tak to robimy update (i zmieniamy metodę, button etc.)
+27. *Paginacja* w Route `/tasks/` zamiast `Task::latest()->get()` robimy `Task::latest()->paginate()` : samo podzieli na różne strony, samo zrobi linki do różnych stron (te linki wykorzystuje się w blade), automatycznie przeczyta query param z URL więc będzie wiedział na której stronie jest.
