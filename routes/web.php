@@ -163,6 +163,13 @@ Route::delete('/tasks/{task}', function(Task $task){
   ->with('success','Task deleted successfully!');
 })->name('tasks.destroy');
 
+Route::put('tasks/{task}/toggle-complete', function (Task $task) {
+  $task->toggleComplete();
+  // return "successssss";
+  return redirect()->back()->with('success', 'Task status changed successfully!');
+
+})->name('tasks.toggle-complete');
+
 // Gdy braliśmy taska z przykładowej klasy Task
 // Route::get('/tasks/{id}' , function ($id) use ($tasks) {
 //   $task = collect($tasks)->firstWhere('id', $id);
