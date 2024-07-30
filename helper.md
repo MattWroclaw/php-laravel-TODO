@@ -31,3 +31,4 @@ Możemy zatrzymać server, i wpisać `php artisan tinker` i możemy pisać queri
 25. W laravel jest coś takiego jak `soft delete` Dodatkowa kolumna w DB
 26. Korzystanie z `subview` za pomocą dyrektywy `@include` . Przykład: `create.view` oraz `update.view` są bardzo podobne, więc można wykorzystać wspólny kod. Wtedy w subview sprawdzamy czy mamy obiekt $task i jeśli tak to robimy update (i zmieniamy metodę, button etc.)
 27. *Paginacja* w Route `/tasks/` zamiast `Task::latest()->get()` robimy `Task::latest()->paginate()` : samo podzieli na różne strony, samo zrobi linki do różnych stron (te linki wykorzystuje się w blade), automatycznie przeczyta query param z URL więc będzie wiedział na której stronie jest.
+28. *Tailwind css* Najprościej jest dodać `<script src="https://cdn.tailwindcss.com"></script>` do head w  app.blade.php `cdn: ContentDeliveryNetwork`: servery na całym świecie, z których zaciągane są tailwindy

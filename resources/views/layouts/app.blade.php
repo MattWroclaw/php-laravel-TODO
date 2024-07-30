@@ -2,11 +2,12 @@
 <html>
 <head>
     <title>Laravel 10 Task List App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     @yield('styles')
 </head>
-<body>
+<body class="container mx-auto mt-10 mb-10 max-w-lg">
     <div>
-        <h1>
+        <h1 class="text-2xl mb-2">
             @yield('title')
         </h1>
         <div>
