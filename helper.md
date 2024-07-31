@@ -33,3 +33,7 @@ Możemy zatrzymać server, i wpisać `php artisan tinker` i możemy pisać queri
 27. *Paginacja* w Route `/tasks/` zamiast `Task::latest()->get()` robimy `Task::latest()->paginate()` : samo podzieli na różne strony, samo zrobi linki do różnych stron (te linki wykorzystuje się w blade), automatycznie przeczyta query param z URL więc będzie wiedział na której stronie jest.
 28. *Tailwind css* Najprościej jest dodać `<script src="https://cdn.tailwindcss.com"></script>` do head w  app.blade.php `cdn: ContentDeliveryNetwork`: servery na całym świecie, z których zaciągane są tailwindy
 28. 1. W `app.blade.php` tworzymy <style>, które zawiera wiele klas tailwinda, które jednocześnie stosujemy w danym elemencie; pamiętamy że te wiele klas musi być poprzedzone `@apply`.  Dodajemy {{-- blade-formatter-disable --}} żeby style nie zostały nadpisane
+28. 2. *Uwaga* jak w `@apply` zrobimy błąd w klasie css to nie będzie żadnego stylu, nawet jak pozostałe klasy mają poprawne nazwy. 
+29. Bez java-script wszystko jest renderowane na serwerze. Laravel zwraca całą stronę z servera
+30. Dodanie 'Alpine.js' -> stosuje się w Laravelu żeby strony były interaktywne. Stosuje się to z toolem "lifewire' ? Jest to po to żeby zastąpić "React'a" ale żeby strony były dynamiczne. Potrzeba też dodać tag <script/> w blade
+30. 1. Alpine ma `x-data` -> komponent Alpine; Np. `x-data="{flash: true}"` `flash` -> ininitial val of "flash". To będzie sterować czy flash ma być widoczny czy nie. Jest to zmienna, która jest dostępna wenątrz <div> który zawiera "x-data". 
